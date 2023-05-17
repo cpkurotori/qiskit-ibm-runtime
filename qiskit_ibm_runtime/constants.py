@@ -24,6 +24,7 @@ QISKIT_IBM_RUNTIME_API_URL = "https://auth.quantum-computing.ibm.com/api"
 
 API_TO_JOB_STATUS = {
     "QUEUED": JobStatus.QUEUED,
+    "DEQUEUED": JobStatus.QUEUED,
     "RUNNING": JobStatus.RUNNING,
     "COMPLETED": JobStatus.DONE,
     "FAILED": JobStatus.ERROR,
