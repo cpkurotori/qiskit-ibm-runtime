@@ -17,13 +17,15 @@ from typing import Dict
 
 from requests import PreparedRequest
 from requests.auth import AuthBase
+from ibm_cloud_sdk_core.token_managers.iam_token_manager import IAMTokenManager
+from ..utils.utils import get_iam_api_url
 
 
 class CloudAuth(AuthBase):
     """Attaches IBM Cloud Authentication to the given Request object."""
 
-    def __init__(self, api_key: str, crn: str):
-        self.api_key = api_key
+    def __init__(self, api_key: str, crn: str, url: str):
+        self.token_manager = IAMTokenManager(api_key, url=get_iam_api_url(url))
         self.crn = crn
 
     def __eq__(self, other: object) -> bool:
@@ -42,7 +44,8 @@ class CloudAuth(AuthBase):
 
     def get_headers(self) -> Dict:
         """Return authorization information to be stored in header."""
-        return {"Service-CRN": self.crn, "Authorization": f"apikey {self.api_key}"}
+        bearer = self.token_manager.get_token()
+        return {"Service-CRN": self.crn, "Authorization": f"Bearer {bearer}"}
 
 
 class QuantumAuth(AuthBase):
